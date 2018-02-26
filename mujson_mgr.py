@@ -265,7 +265,7 @@ General options:
 
 
 def main():
-    shortopts = 'adeclu:i:p:k:O:o:G:g:m:t:f:hs:S:'
+    shortopts = 'adeclru:i:p:k:O:o:G:g:m:t:f:hs:S:'
     longopts = ['help']
     action = None
     user = {}
