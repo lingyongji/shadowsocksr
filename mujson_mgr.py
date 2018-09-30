@@ -218,6 +218,24 @@ class MuMgr(object):
                 print("### user [%s] info %s" %
                       (row['user'], self.userinfo(row, muid)))
 
+    def list_user_ssrlink(self, user):
+        self.data.load(self.config_path)
+        if not user:
+            for row in self.data.json:
+                print("[%s]: %s" % (row['user'], self.ssrlink(row, True, None)))
+            return
+        for row in self.data.json:
+            match = True
+            if 'user' in user and row['user'] != user['user']:
+                match = False
+            if 'port' in user and row['port'] != user['port']:
+                match = False
+            if match:
+                muid = None
+                if 'muid' in user:
+                    muid = user['muid']
+                print("[%s]: %s" % (row['user'], self.ssrlink(row, True, muid)))
+
     def reset_user(self, user):
         up = {'u': 0, 'd': 0, 'transfer_enable': 0}
         self.data.load(self.config_path)
@@ -234,7 +252,7 @@ class MuMgr(object):
 
 
 def print_server_help():
-    print('''usage: python mujson_manage.py -a|-d|-e|-c|-l|-r [OPTION]...
+    print('''usage: python mujson_manage.py -a|-d|-e|-c|-l|-r|-s [OPTION]...
 
 Actions:
   -a                   add/edit a user
@@ -243,6 +261,7 @@ Actions:
   -c                   set u&d to zero
   -l                   display a user infomation or all users infomation
   -r                   reset u&d and max transfer to zero
+  -s                   display a user ssrlink or all users ssrlinks
 
 Options:
   -u USER              the user name
@@ -308,6 +327,8 @@ def main():
                 action = 0
             elif key == '-r':
                 action = 5
+            elif key == '-s':
+                action = 6
             elif key == '-u':
                 user['user'] = value
             elif key == '-i':
@@ -379,6 +400,8 @@ def main():
         manage.list_user(user)
     elif action == 5:
         manage.reset_user(user)
+    elif action == 6:
+        manage.list_user_ssrlink(user)
     elif action is None:
         print_server_help()
 
